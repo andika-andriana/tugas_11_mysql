@@ -1,0 +1,99 @@
+**Tugas 11**
+
+1. Buatlah user baru dengan nama Niomic dengan password c0b4d1b4c4!
+
+        MariaDB [(none)]> CREATE USER 'Niomic'@'localhost' IDENTIFIED BY 'c0b4d1b4c4!';
+        Query OK, 0 rows affected (0.080 sec)
+        
+        MariaDB [(none)]> USE mysql;
+        Database changed
+
+        MariaDB [mysql]> SELECT User, Password, Host FROM user;
+        +--------+-------------------------------------------+-----------+
+        | User   | Password                                  | Host      |
+        +--------+-------------------------------------------+-----------+
+        | root   |                                           | localhost |
+        | Niomic | *3CAC3DE391B5F907D8BE500EFC145FC3E6208ADF | localhost |
+        | root   |                                           | 127.0.0.1 |
+        | root   |                                           | ::1       |
+        | pma    |                                           | localhost |
+        +--------+-------------------------------------------+-----------+
+        5 rows in set (0.001 sec)
+
+2. Ubah password menjadi indonesiaku dengan perintah update set
+
+        MariaDB [mysql]> Select User, Host, Password from user;
+        +--------+-----------+-------------------------------------------+
+        | User   | Host      | Password                                  |
+        +--------+-----------+-------------------------------------------+
+        | root   | localhost |                                           |
+        | Niomic | localhost | *3CAC3DE391B5F907D8BE500EFC145FC3E6208ADF |
+        | root   | 127.0.0.1 |                                           |
+        | root   | ::1       |                                           |
+        | pma    | localhost |                                           |
+        +--------+-----------+-------------------------------------------+
+        5 rows in set (0.001 sec)
+        
+        MariaDB [mysql]> update User set Password = password('indonesiaku') where User='Niomic';
+        ERROR 1348 (HY000): Column 'Password' is not updatable
+
+        MariaDB [mysql]> UPDATE mysql.user SET Password=PASSWORD('indonesiaku') WHERE USER='Niomic' AND Host='localhost';
+        ERROR 1348 (HY000): Column 'Password' is not updatable
+
+        MariaDB [mysql]> set Password for 'Niomic'@'localhost' = password('indonesiaku');
+        Query OK, 0 rows affected (0.028 sec)
+        
+        MariaDB [mysql]> Select User, Host, Password from user;
+        +--------+-----------+-------------------------------------------+
+        | User   | Host      | Password                                  |
+        +--------+-----------+-------------------------------------------+
+        | root   | localhost |                                           |
+        | Niomic | localhost | *4D325E0E2D11B107E020C861636B6790F1291C42 |
+        | root   | 127.0.0.1 |                                           |
+        | root   | ::1       |                                           |
+        | pma    | localhost |                                           |
+        +--------+-----------+-------------------------------------------+
+        5 rows in set (0.001 sec)
+
+3. Berikan hak akses ke user Niomic untuk tabel mahasiswa pada database belajar
+
+        MariaDB [mysql]> GRANT SELECT, DELETE ON belajar.mahasiswa TO Niomic@localhost;
+        Query OK, 0 rows affected (0.051 sec)
+        
+        MariaDB [mysql]> EXIT;
+        Bye
+        
+        C:\Users\AndikaAndriana>mysql -u Niomic -p
+        Enter password: ***********
+        Welcome to the MariaDB monitor.  Commands end with ; or \g.
+        Your MariaDB connection id is 15
+        Server version: 10.4.10-MariaDB mariadb.org binary distribution
+        
+        Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+        
+        Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+        
+        MariaDB [(none)]> SHOW GRANTS;
+        +---------------------------------------------------------------------------------------------------------------+
+        | Grants for Niomic@localhost                                                                                   |
+        +---------------------------------------------------------------------------------------------------------------+
+        | GRANT USAGE ON *.* TO 'Niomic'@'localhost' IDENTIFIED BY PASSWORD '*4D325E0E2D11B107E020C861636B6790F1291C42' |
+        | GRANT SELECT, DELETE ON `belajar`.`mahasiswa` TO 'Niomic'@'localhost'                                         |
+        +---------------------------------------------------------------------------------------------------------------+
+        2 rows in set (0.000 sec)
+
+4. Hapus user Niomic
+
+        MariaDB [mysql]> DROP USER Niomic@localhost;
+        Query OK, 0 rows affected (0.041 sec)
+        
+        MariaDB [mysql]> Select User, Host, Password from user;
+        +------+-----------+----------+
+        | User | Host      | Password |
+        +------+-----------+----------+
+        | root | localhost |          |
+        | root | 127.0.0.1 |          |
+        | root | ::1       |          |
+        | pma  | localhost |          |
+        +------+-----------+----------+
+        4 rows in set (0.001 sec)
